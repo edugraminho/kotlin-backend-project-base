@@ -1,0 +1,216 @@
+# Development Environment Configuration
+
+# API Configuration
+api:
+  server:
+    url: http://localhost:8081/
+  token-expiration-hours: 2160
+
+  # File Storage Paths
+  task:
+    files:
+      prefix: files/task
+      directory: /home/edu/Project/files/files/task
+
+  cost:
+    files:
+      prefix: files/cost
+      directory: /home/edu/Project/files/files/cost
+
+# Server Configuration
+server:
+  port: 8081
+
+spring:
+  # Database Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5435/base
+    username: base
+    password: Project2025
+    driver-class-name: org.postgresql.Driver
+
+  # Flyway Configuration
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:db/migration
+    validate-on-migrate: true
+    # SEGURANÇA: desabilita comando clean em produção
+    clean-disabled: true
+    schemas: public
+    # Para ambiente de desenvolvimento
+    out-of-order: false
+    # Configurações específicas para PostgreSQL
+    url: jdbc:postgresql://localhost:5435/base
+    user: base
+    password: Project2025
+    sql-migration-prefix: V
+    sql-migration-separator: __
+    sql-migration-suffixes: .sql
+
+  # JPA/Hibernate Configuration (Development)
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        ddl-auto: validate
+        format_sql: true
+        naming:
+          physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        jdbc:
+          time_zone: UTC
+
+  # Cache Configuration (Simple for dev, Redis disabled)
+  cache:
+    type: simple
+
+  # Redis Configuration
+  data:
+    redis:
+      host: localhost
+      port: 6380
+      password: S#Y9dDa2vgsh4DKrgYe9u@!
+      database: 0
+      timeout: 2000ms
+      jedis:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
+  # Email Configuration
+  mail:
+    host: smtp.office365.com
+    port: 587
+    username: no-reply@base.com
+    password: your-email-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: false
+            protocols: TLSv1.2
+    from: no-reply@base.com
+
+  cloud:
+    aws:
+      sqs:
+        enabled: false
+      sns:
+        enabled: false
+
+# JWT Configuration (valores fixos para dev)
+jwt:
+  secret: dev-jwt-secret
+  expiration: 86400000
+  refresh-expiration: 2592000000
+  access-token-expiration-seconds: 86400
+
+# Twilio Configuration (valores fixos para dev)
+twilio:
+  account:
+    sid: AC5ac7f...
+  auth:
+    token: 9eca6ebd...
+  phone:
+    number: whatsapp:+555127..
+  sms:
+    phone:
+      number: +1240...
+
+# Google API Configuration
+google:
+  api:
+    key: your-google-api-key
+  oauth:
+    client-id: your-google-client-id
+    client-secret: your-google-client-secret
+
+# Apple OAuth2 Configuration
+apple:
+  oauth:
+    client-id: com.base.app
+    client-secret: generated-client-secret
+    key-id: your-apple-key-id
+    team-id: your-apple-team-id
+
+# Microsoft OAuth2 Configuration
+microsoft:
+  oauth:
+    client-id: your-microsoft-client-id
+    client-secret: your-microsoft-client-secret
+    tenant: common
+
+# Asaas Payment Provider
+asaas:
+  api:
+    base-key: your-asaas-api-base-key
+    access-token: your-asaas-api-access-token
+
+# RevenueCat Configuration
+revenuecat:
+  api:
+    signature-key: your-revenuecat-signature-key
+
+# Firebase Configuration
+firebase:
+  service-account: classpath:firebase-service-account.json
+
+# AWS Configuration
+aws:
+  region: us-east-1
+  credentials:
+    access-key: your-aws-access-key
+    secret-key: your-aws-secret-key
+
+# SQS Queue Configuration
+queue:
+  payment-webhook:
+    concurrency: 3
+    name: go4buid-gesture-payment-webhook-sqs-dev.fifo
+    url: your-sqs-queue-url
+
+# Storage Configuration
+storage:
+  type: s3
+  s3:
+    bucket: base-files-hlg
+    region: us-east-1
+    access-key-id: your-aws-access-key
+    secret-access-key: your-aws-secret-key
+
+# Payment Configuration
+payment:
+  is-production-environment: false
+  provider-activated: REVENUECAT
+
+# External Services
+base:
+  invite:
+    base-url: https://invite.homolog.base.com/
+
+# SMS Verification Configuration
+verification:
+  sms:
+    expiration-minutes: 5
+    max-attempts: 3
+    cooldown-seconds: 60
+  email:
+    expiration-minutes: 30
+    max-attempts: 5
+
+# Logging Configuration (Development)
+logging:
+  level:
+    com.base: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

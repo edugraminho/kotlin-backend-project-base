@@ -1,0 +1,269 @@
+# Application Configuration
+app:
+  name: "GESTURE - API"
+  description: "Base - Gesture API"
+  version:
+    number: ${APP_VERSION:2.0.0}
+    update-required: ${APP_VERSION_UPDATE_REQUIRED:false}
+
+  # Virtual Threads (Java 21)
+  threads:
+    virtual:
+      enabled: true
+
+  # File Upload Configuration
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 40MB
+
+  # Database Configuration
+  datasource:
+    hikari:
+      maximum-pool-size: 20
+      connection-timeout: 60000
+      register-mbeans: true
+      leak-detection-threshold: 30000
+
+  # JPA/Hibernate Configuration
+  jpa:
+    show-sql: false
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc:
+          time_zone: UTC
+
+  # Email Configuration (Microsoft 365)
+  mail:
+    host: smtp.office365.com
+    port: 587
+    username: no-reply@base.com
+    password: ...
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: false
+            protocols: TLSv1.2
+    from: no-reply@base.com
+
+  # Thymeleaf (substituindo Freemarker)
+  thymeleaf:
+    charset: UTF-8
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+# External APIs Configuration
+external-apis:
+  brasil-api:
+    base-url: https://brasilapi.com.br/api
+
+  receita-ws-api:
+    base-url: https://receitaws.com.br
+
+  via-cep-api:
+    base-url: https://viacep.com.br/ws
+
+# Google API Configuration
+google:
+  api:
+    key: AIzaSyBvYV-...
+  oauth:
+    client-id: ${GOOGLE_OAUTH_CLIENT_ID}
+    client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
+
+# Twilio Configuration
+twilio:
+  account:
+    sid: AC5ac7fcffd23d57195be7c73c401e1c5b
+  auth:
+    token: 9eca6ebd5da754e338b0874a77e71b81
+  phone:
+    number: whatsapp:+555127970107
+  sms:
+    phone:
+      number: +12406508335
+
+# Asaas Payment Provider
+asaas:
+  api:
+    base-key: =$aact_YTU5YTE...
+    access-token: =ewogICJqdG...
+
+# RevenueCat Configuration
+revenuecat:
+  api:
+    signature-key: =768437b3e4adb...
+
+# AWS Configuration
+aws:
+  region: us-east-1
+  credentials:
+    access-key: AKIA5X...
+    secret-key: bWUgUbGk...
+
+# SQS Queue Configuration
+queue:
+  payment-webhook:
+    concurrency: 3
+    name: gesture-payment-webhook-sqs-dev.fifo
+    url: https://sqs.us-east-1.amazonaws.com/...
+
+# JWT Configuration
+jwt:
+  secret: 2sfcnM3D...
+  # 24h para mobile
+  expiration: 86400000
+  # 30 dias
+  refresh-expiration: 2592000000
+  access-token-expiration-seconds: 86400
+  temp-token-expiration-seconds: 86400000
+
+# Auth Configuration
+auth:
+  login:
+    max-attempts: 5
+    lockout-minutes: 15
+  rate-limit:
+    tokens-per-minute: 60
+
+# Verification Settings
+verification:
+  sms:
+    expiration-minutes: 5
+    max-attempts: 3
+    cooldown-seconds: 60
+  email:
+    expiration-minutes: 10
+    max-attempts: 5
+  temp-token:
+    expiration-minutes: 10
+
+# ===========================
+# SPRING BOOT CONFIGURATION
+# ===========================
+spring:
+  # Database Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5435/base
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      connection-timeout: 60000
+      register-mbeans: true
+      leak-detection-threshold: 30000
+
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate  # IMPORTANTE: validate para usar Flyway
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        jdbc:
+          time_zone: UTC
+        naming:
+          physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+
+  # FLYWAY CONFIGURATION
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    baseline-description: "Initial baseline"
+    locations: classpath:db/migration
+    validate-on-migrate: true
+    clean-disabled: true
+    schemas: public
+    sql-migration-prefix: V
+    sql-migration-separator: __
+    sql-migration-suffixes: .sql
+    out-of-order: false
+    encoding: UTF-8
+
+  # OAuth2 Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_OAUTH_CLIENT_ID}
+            client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
+            scope: openid,profile,email
+            redirect-uri: ${API_SERVER_URL}login/oauth2/code/google
+
+          apple:
+            client-id: ${APPLE_OAUTH_CLIENT_ID}
+            client-secret: ${APPLE_OAUTH_CLIENT_SECRET}
+            scope: name,email
+            authorization-grant-type: authorization_code
+            redirect-uri: ${API_SERVER_URL}login/oauth2/code/apple
+
+          microsoft:
+            client-id: ${MICROSOFT_OAUTH_CLIENT_ID}
+            client-secret: ${MICROSOFT_OAUTH_CLIENT_SECRET}
+            scope: openid,profile,email
+            redirect-uri: ${API_SERVER_URL}login/oauth2/code/microsoft
+
+        provider:
+          apple:
+            authorization-uri: https://appleid.apple.com/auth/authorize
+            token-uri: https://appleid.apple.com/auth/token
+            user-info-uri: https://appleid.apple.com/auth/userinfo
+            jwk-set-uri: https://appleid.apple.com/auth/keys
+
+          microsoft:
+            authorization-uri: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+            token-uri: https://login.microsoftonline.com/common/oauth2/v2.0/token
+            user-info-uri: https://graph.microsoft.com/v1.0/me
+            jwk-set-uri: https://login.microsoftonline.com/common/discovery/v2.0/keys
+
+# Apple OAuth2 Configuration
+apple:
+  oauth:
+    client-id: ${APPLE_OAUTH_CLIENT_ID}        # Bundle ID do app iOS
+    client-secret: ${APPLE_OAUTH_CLIENT_SECRET}
+    key-id: ${APPLE_OAUTH_KEY_ID}
+    team-id: ${APPLE_OAUTH_TEAM_ID}
+
+# Microsoft OAuth2 Configuration
+microsoft:
+  oauth:
+    client-id: ${MICROSOFT_OAUTH_CLIENT_ID}
+    client-secret: ${MICROSOFT_OAUTH_CLIENT_SECRET}
+    tenant: ${MICROSOFT_OAUTH_TENANT:common}
+
+# Logging Configuration
+logging:
+  level:
+    com.base: INFO
+    com.zaxxer.hikari: OFF
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+    # Para debug do Flyway (temporário)
+    org.flywaydb: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,flyway
+  endpoint:
+    health:
+      show-details: when-authorized
