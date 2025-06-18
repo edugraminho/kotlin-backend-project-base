@@ -83,15 +83,14 @@ google:
 # Twilio Configuration
 twilio:
   account:
-    sid: AC5ac7fcffd23d57195be7c73c401e1c5b
+    sid: AC5ac7fc...
   auth:
-    token: 9eca6ebd5da754e338b0874a77e71b81
+    token: 9eca6eb...
   phone:
-    number: whatsapp:+555127970107
+    number: whatsapp:+5551..
   sms:
     phone:
-      number: +12406508335
-
+      number: +1240...
 # Asaas Payment Provider
 asaas:
   api:
