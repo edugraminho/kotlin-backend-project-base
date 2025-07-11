@@ -1,10 +1,10 @@
 # Application Configuration
 app:
-  name: "GESTURE - API"
-  description: "Base - Gesture API"
+  name: "ProjectBaseName - API"
+  description: "ProjectBaseName - Base API"
   version:
-    number: ${APP_VERSION:2.0.0}
-    update-required: ${APP_VERSION_UPDATE_REQUIRED:false}
+    number: 2.0.0
+    update-required: false
 
   # Virtual Threads (Java 21)
   threads:
@@ -41,8 +41,9 @@ app:
   mail:
     host: smtp.office365.com
     port: 587
-    username: no-reply@base.com
-    password: ...
+    username: no-reply@projectbasename.com
+    password: ....
+    from: no-reply@projectbasename.com
     properties:
       mail:
         smtp:
@@ -52,7 +53,6 @@ app:
           ssl:
             enable: false
             protocols: TLSv1.2
-    from: no-reply@base.com
 
   # Thymeleaf (substituindo Freemarker)
   thymeleaf:
@@ -60,6 +60,17 @@ app:
     cache: false
     prefix: classpath:/templates/
     suffix: .html
+
+# API Configuration
+api:
+  server:
+    url: ${API_SERVER_URL:http://localhost:8080}
+
+# Password Reset Configuration
+password-reset:
+  token:
+    expiration-hours: 1
+  cooldown-minutes: 5
 
 # External APIs Configuration
 external-apis:
@@ -75,7 +86,7 @@ external-apis:
 # Google API Configuration
 google:
   api:
-    key: AIzaSyBvYV-...
+    key: <GOOGLE_API_KEY>
   oauth:
     client-id: ${GOOGLE_OAUTH_CLIENT_ID}
     client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
@@ -83,42 +94,56 @@ google:
 # Twilio Configuration
 twilio:
   account:
-    sid: AC5ac7fc...
+    sid: <TWILIO_ACCOUNT_SID>
   auth:
-    token: 9eca6eb...
+    token: <TWILIO_AUTH_TOKEN>
   phone:
-    number: whatsapp:+5551..
+    number: whatsapp:+<TWILIO_PHONE_NUMBER>
   sms:
     phone:
-      number: +1240...
-# Asaas Payment Provider
-asaas:
-  api:
-    base-key: =$aact_YTU5YTE...
-    access-token: =ewogICJqdG...
+      number: +<TWILIO_SMS_PHONE_NUMBER>
+  webhook:
+    enabled: true
+
+
 
 # RevenueCat Configuration
 revenuecat:
   api:
-    signature-key: =768437b3e4adb...
+    signature-key: <REVENUECAT_SIGNATURE_KEY>
+    public-key: <REVENUECAT_PUBLIC_KEY>
+    webhook-url: <REVENUECAT_WEBHOOK_URL>
+    environment: sandbox
+
+# Configuração geral de pagamentos
+payment:
+  is-production-environment: false
+  provider-activated: REVENUECAT
+  default-currency: BRL
+  webhook-retries: 3
+  webhook-timeout-seconds: 30
+
+# Firebase Configuration
+firebase:
+  service-account: classpath:<FIREBASE_SERVICE_ACCOUNT_FILE>.json
 
 # AWS Configuration
 aws:
   region: us-east-1
   credentials:
-    access-key: AKIA5X...
-    secret-key: bWUgUbGk...
+    access-key: <AWS_ACCESS_KEY>
+    secret-key: <AWS_SECRET_KEY>
 
 # SQS Queue Configuration
 queue:
   payment-webhook:
     concurrency: 3
-    name: gesture-payment-webhook-sqs-dev.fifo
-    url: https://sqs.us-east-1.amazonaws.com/...
+    name: <SQS_QUEUE_NAME>.fifo
+    url: https://sqs.us-east-1.amazonaws.com/<AWS_ACCOUNT_ID>/<SQS_QUEUE_NAME>.fifo
 
 # JWT Configuration
 jwt:
-  secret: 2sfcnM3D...
+  secret: <JWT_SECRET>
   # 24h para mobile
   expiration: 86400000
   # 30 dias
@@ -130,7 +155,7 @@ jwt:
 auth:
   login:
     max-attempts: 5
-    lockout-minutes: 15
+    lockout-minutes: 5
   rate-limit:
     tokens-per-minute: 60
 
@@ -152,9 +177,9 @@ verification:
 spring:
   # Database Configuration
   datasource:
-    url: jdbc:postgresql://localhost:5435/base
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: jdbc:postgresql://localhost:5435/projectbasename
+    username: <DB_USERNAME>
+    password: <DB_PASSWORD>
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -184,7 +209,6 @@ spring:
     baseline-description: "Initial baseline"
     locations: classpath:db/migration
     validate-on-migrate: true
-    clean-disabled: true
     schemas: public
     sql-migration-prefix: V
     sql-migration-separator: __
@@ -192,62 +216,17 @@ spring:
     out-of-order: false
     encoding: UTF-8
 
-  # OAuth2 Configuration
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_OAUTH_CLIENT_ID}
-            client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
-            scope: openid,profile,email
-            redirect-uri: ${API_SERVER_URL}login/oauth2/code/google
-
-          apple:
-            client-id: ${APPLE_OAUTH_CLIENT_ID}
-            client-secret: ${APPLE_OAUTH_CLIENT_SECRET}
-            scope: name,email
-            authorization-grant-type: authorization_code
-            redirect-uri: ${API_SERVER_URL}login/oauth2/code/apple
-
-          microsoft:
-            client-id: ${MICROSOFT_OAUTH_CLIENT_ID}
-            client-secret: ${MICROSOFT_OAUTH_CLIENT_SECRET}
-            scope: openid,profile,email
-            redirect-uri: ${API_SERVER_URL}login/oauth2/code/microsoft
-
-        provider:
-          apple:
-            authorization-uri: https://appleid.apple.com/auth/authorize
-            token-uri: https://appleid.apple.com/auth/token
-            user-info-uri: https://appleid.apple.com/auth/userinfo
-            jwk-set-uri: https://appleid.apple.com/auth/keys
-
-          microsoft:
-            authorization-uri: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
-            token-uri: https://login.microsoftonline.com/common/oauth2/v2.0/token
-            user-info-uri: https://graph.microsoft.com/v1.0/me
-            jwk-set-uri: https://login.microsoftonline.com/common/discovery/v2.0/keys
-
-# Apple OAuth2 Configuration
-apple:
-  oauth:
-    client-id: ${APPLE_OAUTH_CLIENT_ID}        # Bundle ID do app iOS
-    client-secret: ${APPLE_OAUTH_CLIENT_SECRET}
-    key-id: ${APPLE_OAUTH_KEY_ID}
-    team-id: ${APPLE_OAUTH_TEAM_ID}
-
 # Microsoft OAuth2 Configuration
 microsoft:
   oauth:
-    client-id: ${MICROSOFT_OAUTH_CLIENT_ID}
-    client-secret: ${MICROSOFT_OAUTH_CLIENT_SECRET}
-    tenant: ${MICROSOFT_OAUTH_TENANT:common}
+    client-id: <MICROSOFT_OAUTH_CLIENT_ID>
+    client-secret: <MICROSOFT_OAUTH_CLIENT_SECRET>
+    tenant: <MICROSOFT_OAUTH_TENANT>
 
 # Logging Configuration
 logging:
   level:
-    com.base: INFO
+    com.projectbasename: INFO
     com.zaxxer.hikari: OFF
     org.springframework.web: WARN
     org.hibernate.SQL: WARN
@@ -266,3 +245,18 @@ management:
   endpoint:
     health:
       show-details: when-authorized
+
+# SpringDoc OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+    try-it-out-enabled: true
+    filter: true
+  packages-to-scan: com.projectbasename.infrastructure.controller
+  paths-to-match: /v1/**, /twilio-webhooks/**

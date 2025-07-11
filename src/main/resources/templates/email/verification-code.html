@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="email/base :: base(~{::title}, ~{::content})">
+<head>
+    <title>Código de verificação - ProjectBaseName</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <h1 class="email-title">
+            Código de Verificação
+        </h1>
+        
+        <div class="email-text">
+            Olá, <strong th:text="${userName}">Nome do Usuário</strong>! 👋
+        </div>
+        
+        <div class="email-text">
+            Use o código abaixo para verificar sua conta no ProjectBaseName:
+        </div>
+        
+        <div class="code-box">
+            <div class="verification-code" th:text="${verificationCode}">123456</div>
+            <div class="expiration-text">
+                Válido por <span th:text="${expirationMinutes}">10</span> minutos
+            </div>
+        </div>
+        
+        <div class="email-text" style="text-align: center; color: #718096;">
+            Digite este código na tela de verificação para continuar
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="email-text" style="font-size: 14px; color: #718096;">
+            <strong>⏰ Atenção:</strong> Este código expira em 
+            <strong th:text="${expirationMinutes}">10</strong> minutos por motivos de segurança.
+        </div>
+        
+        <div class="email-text" style="font-size: 14px; color: #e53e3e; background-color: #fed7d7; padding: 15px; border-radius: 8px; margin-top: 20px;">
+            <strong>🛡️ Segurança:</strong> Se você não solicitou este código, ignore este email. 
+            Alguém pode estar tentando acessar sua conta. Considere alterar sua senha.
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="email-text" style="font-size: 14px; color: #718096;">
+            <strong>❓ Não conseguiu usar o código?</strong>
+            <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.8;">
+                <li>Verifique se digitou o código corretamente</li>
+                <li>Certifique-se de que não expirou</li>
+                <li>Tente solicitar um novo código</li>
+                <li>Entre em contato com o suporte se o problema persistir</li>
+            </ul>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="email-text" style="text-align: center; font-style: italic; color: #9ca3af;">
+            "Verificação rápida e segura com ProjectBaseName"
+        </div>
+    </div>
+</body>
+</html> 

@@ -10,12 +10,12 @@ api:
   task:
     files:
       prefix: files/task
-      directory: /home/edu/Project/files/files/task
+      directory: /home/edu/PROJECTBASENAME/files/files/task
 
   cost:
     files:
       prefix: files/cost
-      directory: /home/edu/Project/files/files/cost
+      directory: /home/edu/PROJECTBASENAME/files/files/cost
 
 # Server Configuration
 server:
@@ -24,9 +24,9 @@ server:
 spring:
   # Database Configuration
   datasource:
-    url: jdbc:postgresql://localhost:5435/base
-    username: base
-    password: Project2025
+    url: jdbc:postgresql://localhost:5435/projectbasename
+    username: projectbasename
+    password: projectbasename2025
     driver-class-name: org.postgresql.Driver
 
   # Flyway Configuration
@@ -42,9 +42,9 @@ spring:
     # Para ambiente de desenvolvimento
     out-of-order: false
     # Configurações específicas para PostgreSQL
-    url: jdbc:postgresql://localhost:5435/base
-    user: base
-    password: Project2025
+    url: jdbc:postgresql://localhost:5435/projectbasename
+    user: projectbasename
+    password: projectbasename2025
     sql-migration-prefix: V
     sql-migration-separator: __
     sql-migration-suffixes: .sql
@@ -61,18 +61,14 @@ spring:
         jdbc:
           time_zone: UTC
 
-  # Cache Configuration (Simple for dev, Redis disabled)
-  cache:
-    type: simple
-
   # Redis Configuration
   data:
     redis:
       host: localhost
       port: 6380
-      password: S#Y9dDa2vgsh4DKrgYe9u@!
+      password: projectbasename2025
       database: 0
-      timeout: 2000ms
+      timeout: 10000ms
       jedis:
         pool:
           max-active: 8
@@ -84,8 +80,8 @@ spring:
   mail:
     host: smtp.office365.com
     port: 587
-    username: no-reply@base.com
-    password: your-email-password
+    username: no-reply@projectbasename.com
+    password: <SMTP_PASSWORD>
     properties:
       mail:
         smtp:
@@ -95,7 +91,7 @@ spring:
           ssl:
             enable: false
             protocols: TLSv1.2
-    from: no-reply@base.com
+    from: no-reply@projectbasename.com
 
   cloud:
     aws:
@@ -104,95 +100,105 @@ spring:
       sns:
         enabled: false
 
-# JWT Configuration (valores fixos para dev)
+# Auth Configuration
+auth:
+  login:
+    max-attempts: 30
+    lockout-minutes: 1
+  rate-limit:
+    tokens-per-minute: 60
+
+
+# JWT Configuration
 jwt:
-  secret: dev-jwt-secret
+  secret: <JWT_SECRET>
   expiration: 86400000
   refresh-expiration: 2592000000
   access-token-expiration-seconds: 86400
 
-# Twilio Configuration (valores fixos para dev)
+# Twilio Configuration
 twilio:
   account:
-    sid: AC5ac7f...
+    sid: <TWILIO_ACCOUNT_SID>
   auth:
-    token: 9eca6ebd...
+    token: <TWILIO_AUTH_TOKEN>
   phone:
-    number: whatsapp:+555127..
+    number: whatsapp:+<TWILIO_PHONE_NUMBER>
   sms:
     phone:
-      number: +1240...
+      number: +<TWILIO_SMS_PHONE_NUMBER>
+  webhook:
+    enabled: false
 
 # Google API Configuration
 google:
   api:
-    key: your-google-api-key
+    key: <GOOGLE_API_KEY>
   oauth:
-    client-id: your-google-client-id
-    client-secret: your-google-client-secret
+    client-id: <GOOGLE_OAUTH_CLIENT_ID>
+    client-secret: <GOOGLE_OAUTH_CLIENT_SECRET>
 
 # Apple OAuth2 Configuration
 apple:
   oauth:
-    client-id: com.base.app
-    client-secret: generated-client-secret
-    key-id: your-apple-key-id
-    team-id: your-apple-team-id
+    client-id: <APPLE_OAUTH_CLIENT_ID>
+    client-secret: <APPLE_OAUTH_CLIENT_SECRET>
+    key-id: <APPLE_KEY_ID>
+    team-id: <APPLE_TEAM_ID>
 
 # Microsoft OAuth2 Configuration
 microsoft:
   oauth:
-    client-id: your-microsoft-client-id
-    client-secret: your-microsoft-client-secret
-    tenant: common
+    client-id: <MICROSOFT_OAUTH_CLIENT_ID>
+    client-secret: <MICROSOFT_OAUTH_CLIENT_SECRET>
+    tenant: <MICROSOFT_OAUTH_TENANT>
 
-# Asaas Payment Provider
-asaas:
-  api:
-    base-key: your-asaas-api-base-key
-    access-token: your-asaas-api-access-token
+
 
 # RevenueCat Configuration
 revenuecat:
   api:
-    signature-key: your-revenuecat-signature-key
+    signature-key: <REVENUECAT_SIGNATURE_KEY>
+    public-key: <REVENUECAT_PUBLIC_KEY>
+    webhook-url: <REVENUECAT_WEBHOOK_URL>
+    environment: sandbox
 
 # Firebase Configuration
 firebase:
   service-account: classpath:firebase-service-account.json
 
-# AWS Configuration
-aws:
-  region: us-east-1
-  credentials:
-    access-key: your-aws-access-key
-    secret-key: your-aws-secret-key
-
-# SQS Queue Configuration
+# SQS Queue Configuration (Development)
 queue:
   payment-webhook:
-    concurrency: 3
-    name: go4buid-gesture-payment-webhook-sqs-dev.fifo
-    url: your-sqs-queue-url
+    concurrency: 1  # Menos concorrência em desenvolvimento
+    name: <SQS_QUEUE_NAME>.fifo
+    url: https://sqs.us-east-1.amazonaws.com/<AWS_ACCOUNT_ID>/<SQS_QUEUE_NAME>.fifo
+    # Configurações específicas para desenvolvimento
+    retry-delay-seconds: 30
+    max-retries: 3
+    dead-letter-queue: <SQS_QUEUE_NAME>-dlq.fifo
 
 # Storage Configuration
 storage:
   type: s3
   s3:
-    bucket: base-files-hlg
+    bucket: <S3_BUCKET_NAME>
     region: us-east-1
-    access-key-id: your-aws-access-key
-    secret-access-key: your-aws-secret-key
+    access-key-id: <AWS_ACCESS_KEY>
+    secret-access-key: <AWS_SECRET_KEY>
 
 # Payment Configuration
 payment:
   is-production-environment: false
   provider-activated: REVENUECAT
+  default-currency: BRL
+  webhook-retries: 3
+  webhook-timeout-seconds: 30
 
 # External Services
-base:
+projectbasename:
   invite:
-    base-url: https://invite.homolog.base.com/
+    base-url: https://invite.homolog.<PROJECT_BASE_NAME>.com/
 
 # SMS Verification Configuration
 verification:
@@ -200,6 +206,7 @@ verification:
     expiration-minutes: 5
     max-attempts: 3
     cooldown-seconds: 60
+    dev-mode: true
   email:
     expiration-minutes: 30
     max-attempts: 5
@@ -207,10 +214,38 @@ verification:
 # Logging Configuration (Development)
 logging:
   level:
-    com.base: DEBUG
+    com.projectbasename: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql: TRACE
     org.springframework.web: DEBUG
     org.springframework.security: DEBUG
+    # SpringDoc logging
+    org.springdoc: DEBUG
+    io.swagger: DEBUG
+    # Para identificar problemas de serialização
+    com.fasterxml.jackson: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# SpringDoc OpenAPI Configuration (Development)
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+    try-it-out-enabled: true
+    filter: true
+    # Configuração para melhor debug
+    doc-expansion: none
+    default-model-expand-depth: 3
+    default-models-expand-depth: 3
+  packages-to-scan: com.projectbasename.infrastructure.controller
+  paths-to-match: /v1/**, /twilio-webhooks/**
+  # Configurações adicionais para resolver problemas
+  model-and-view-allowed: true
+  override-with-generic-response: false
+

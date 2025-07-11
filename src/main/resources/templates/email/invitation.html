@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="email/base :: base(~{::title}, ~{::content})">
+<head>
+    <title>Convite para fazer parte da empresa</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <h1 class="email-title">
+            Você foi convidado!
+        </h1>
+        
+        <div class="email-text">
+            Olá! 👋
+        </div>
+        
+        <div class="email-text">
+            <strong th:text="${inviterName}">Nome do Convidador</strong> convidou você para fazer parte da equipe na empresa 
+            <strong th:text="${companyName}">Nome da Empresa</strong> na plataforma ProjectBaseName.
+        </div>
+        
+        <div class="email-text">
+            O ProjectBaseName é a plataforma completa para gestão de obras e construção civil, 
+            onde você poderá colaborar com sua equipe de forma eficiente e organizada.
+        </div>
+        
+        <div class="button-center">
+            <a th:href="${acceptUrl}" class="button">
+                Aceitar Convite
+            </a>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="email-text" style="font-size: 14px; color: #718096;">
+            <strong>🔗 Link alternativo:</strong><br>
+            Se o botão acima não funcionar, copie e cole este link no seu navegador:<br>
+            <span style="word-break: break-all; color: #FF6B35;" th:text="${acceptUrl}">URL do convite</span>
+        </div>
+        
+        <div class="email-text" style="font-size: 14px; color: #718096; margin-top: 20px;">
+            <strong>⏰ Importante:</strong> Este convite é válido por 7 dias. Após esse período, 
+            será necessário solicitar um novo convite.
+        </div>
+        
+        <div class="email-text" style="font-size: 14px; color: #718096;">
+            <strong>❓ Precisa de ajuda?</strong> Entre em contato com o suporte do ProjectBaseName 
+            ou com quem te convidou.
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="email-text" style="text-align: center; font-style: italic; color: #9ca3af;">
+            "Simplifique a gestão da sua obra com o ProjectBaseName"
+        </div>
+    </div>
+</body>
+</html> 

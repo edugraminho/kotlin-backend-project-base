@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" 
+      th:fragment="base(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title th:text="${title}">ProjectBaseName</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:AllowPNG/>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+    <style>
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .email-wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            padding: 30px 40px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        
+        .email-content {
+            padding: 40px;
+        }
+        
+        .email-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .email-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
+        }
+        
+        .button-center {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .code-box {
+            background-color: #f7fafc;
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .verification-code {
+            font-size: 32px;
+            font-weight: bold;
+            color: #FF6B35;
+            letter-spacing: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .expiration-text {
+            font-size: 14px;
+            color: #718096;
+            margin-top: 10px;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: #e2e8f0;
+            margin: 30px 0;
+        }
+        
+        .email-footer {
+            background-color: #2d3748;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        
+        .footer-text {
+            color: #a0aec0;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .footer-links {
+            margin-bottom: 20px;
+        }
+        
+        .footer-link {
+            color: #FF6B35;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .app-download {
+            margin-top: 20px;
+        }
+        
+        .app-badge {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        
+        .app-badge img {
+            height: 40px;
+            width: auto;
+        }
+        
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .email-wrapper {
+                margin: 0;
+                box-shadow: none;
+            }
+            
+            .email-header,
+            .email-content,
+            .email-footer {
+                padding: 20px;
+            }
+            
+            .email-title {
+                font-size: 20px;
+            }
+            
+            .button {
+                display: block;
+                width: 100%;
+                padding: 16px;
+            }
+            
+            .verification-code {
+                font-size: 28px;
+                letter-spacing: 2px;
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .email-wrapper {
+                background-color: #1a202c;
+            }
+            
+            .email-content {
+                background-color: #1a202c;
+            }
+            
+            .email-title {
+                color: #f7fafc;
+            }
+            
+            .email-text {
+                color: #e2e8f0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <!-- Header -->
+        <div class="email-header">
+            <div class="logo">PROJECTBASENAME</div>
+        </div>
+        
+        <!-- Content -->
+        <div class="email-content">
+            <div th:replace="${content}"></div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="footer-text">
+                Este email foi enviado pela plataforma ProjectBaseName
+            </div>
+            
+            <div class="footer-links">
+                <a href="#" class="footer-link" th:href="${baseUrl}">Site</a>
+                <a href="#" class="footer-link" th:href="${baseUrl + '/support'}">Suporte</a>
+                <a href="#" class="footer-link" th:href="${baseUrl + '/privacy'}">Privacidade</a>
+            </div>
+            
+            <div class="app-download">
+                <div class="app-badge">
+                    <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/pt-br?size=250x83&amp;releaseDate=1641772800" 
+                         alt="Download na App Store" />
+                </div>
+                <div class="app-badge">
+                    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/pt-br_badge_web_generic.png" 
+                         alt="Disponível no Google Play" />
+                </div>
+            </div>
+            
+            <div class="footer-text" style="margin-top: 20px;">
+                &copy; <span th:text="${currentYear}">2024</span> ProjectBaseName. Todos os direitos reservados.
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

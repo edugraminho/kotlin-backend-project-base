@@ -1,16 +1,30 @@
 plugins {
-    id("org.springframework.boot") version "3.2.4"
+    id("org.springframework.boot") version "3.5.3"
     id("io.spring.dependency-management") version "1.1.4"
     kotlin("jvm") version "1.9.24"
-    kotlin("plugin.spring") version "1.9.23"
-    kotlin("plugin.jpa") version "1.9.23"
-    kotlin("plugin.serialization") version "1.9.23"
+    kotlin("plugin.spring") version "1.9.24"
+    kotlin("plugin.jpa") version "1.9.24"
+    kotlin("plugin.serialization") version "1.9.24"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
-group = "com.base"
+group = "com.projectbasename"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_21
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "21"
+        freeCompilerArgs = listOf("-Xjsr305=strict")
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
 
 val mockkVersion = "1.13.10"
 val testcontainersVersion = "1.19.7"
@@ -40,11 +54,11 @@ dependencies {
     // Spring Security OAuth2 JOSE
     implementation("org.springframework.security:spring-security-oauth2-jose")
 
-    // Google OAuth2 validation (se precisar validar tokens Google diretamente)
+    // Google OAuth2 validation - Google
     implementation("com.google.auth:google-auth-library-oauth2-http:1.23.0")
 
-    // Apple JWT validation (se precisar validar tokens Apple diretamente)
-    implementation("com.nimbusds:nimbus-jose-jwt:9.37.3")
+    // Apple JWT validation - Apple
+    implementation("com.nimbusds:nimbus-jose-jwt:10.3")
 
     // Kotlin
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -58,6 +72,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
 
     // Flyway
+    implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.flywaydb:flyway-core")
 
     // Hibernate Utils
@@ -73,8 +88,9 @@ dependencies {
     // Spring Cloud AWS
     implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs:3.1.1")
 
-    // IBM MQ
-    implementation("com.ibm.mq:mq-jms-spring-boot-starter:3.2.4")
+    // AWS SQS JMS (para processamento assíncrono)
+    implementation("com.amazonaws:amazon-sqs-java-messaging-lib:2.1.2")
+    implementation("org.springframework:spring-jms")
 
     // Google APIs
     implementation("com.google.api-client:google-api-client:2.4.0")
@@ -121,6 +137,14 @@ dependencies {
     if (osName.contains("mac")) {
         implementation("io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64")
     }
+
+    // JWT Authentication
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
+    // Twilio SMS
+    implementation("com.twilio.sdk:twilio:9.14.1")
 }
 
 ktlint {
